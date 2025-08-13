@@ -1,0 +1,9 @@
+node_modules
+dist
+
+.idea
+
+tsconfig.tsbuildinfo
+
+# Project exclude paths
+/eslint.config.mjs
