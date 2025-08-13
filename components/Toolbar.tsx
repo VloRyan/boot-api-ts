@@ -13,9 +13,12 @@ import { JSX, ReactElement, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { extractFilter, toParamFamily } from "ts-jsonapi-form/jsonapi/";
-import { ObjectForm } from "ts-jsonapi-form/form/";
-import { ObjectLike } from "ts-jsonapi-form/jsonapi/model/";
+import {
+  extractFilter,
+  toParamFamily,
+} from "@vloryan/ts-jsonapi-form/jsonapi/";
+import { ObjectForm } from "@vloryan/ts-jsonapi-form/form/";
+import { ObjectLike } from "@vloryan/ts-jsonapi-form/jsonapi/model/";
 import { trimSuffix } from "../functions";
 
 export interface ToolbarProps {

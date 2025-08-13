@@ -1,8 +1,8 @@
-import { ResourceObjectForm } from "ts-jsonapi-form/form/";
+import { ResourceObjectForm } from "@vloryan/ts-jsonapi-form/form/";
 import {
   ResourceObject,
   SingleResourceDoc,
-} from "ts-jsonapi-form/jsonapi/model/";
+} from "@vloryan/ts-jsonapi-form/jsonapi/model/";
 import type { QueryKey } from "@tanstack/query-core";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAlertSubmitResponseHandler } from "./";

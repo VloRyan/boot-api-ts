@@ -1,4 +1,4 @@
-import { ObjectForm } from "ts-jsonapi-form/form/";
+import { ObjectForm } from "@vloryan/ts-jsonapi-form/form/";
 import React, { ChangeEvent, JSX, useEffect, useState } from "react";
 import {
   CheckboxField,
@@ -19,10 +19,10 @@ import {
   ResourceIdentifierObject,
   ResourceObject,
   SingleResourceDoc,
-} from "ts-jsonapi-form/jsonapi/model/";
-import { fetchResource } from "ts-jsonapi-form/jsonapi/";
+} from "@vloryan/ts-jsonapi-form/jsonapi/model/";
+import { fetchResource } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { LoadingSpinner } from "../";
-import { ObjectLike } from "ts-jsonapi-form/jsonapi/model/Types";
+import { ObjectLike } from "@vloryan/ts-jsonapi-form/jsonapi/model/Types";
 import { ColProps } from "react-bootstrap/Col";
 
 export type FormControlElement =

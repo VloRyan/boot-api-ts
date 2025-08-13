@@ -1,7 +1,7 @@
 import { DeleteButton } from "./";
 
-import { ResourceObject } from "ts-jsonapi-form/jsonapi/model";
-import { deleteResource } from "ts-jsonapi-form/jsonapi/";
+import { ResourceObject } from "@vloryan/ts-jsonapi-form/jsonapi/model";
+import { deleteResource } from "@vloryan/ts-jsonapi-form/jsonapi/";
 
 import { TypeIcon } from "./icons/";
 import { useAlert } from "../hooks/";

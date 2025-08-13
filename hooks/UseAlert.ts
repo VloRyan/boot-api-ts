@@ -1,6 +1,9 @@
 import { useContext, useRef, useState } from "react";
 import { Alert, AlertContext } from "../components/context/";
-import { ApiError, ResourceObject } from "ts-jsonapi-form/jsonapi/model/";
+import {
+  ApiError,
+  ResourceObject,
+} from "@vloryan/ts-jsonapi-form/jsonapi/model/";
 import { useLocation } from "wouter";
 import { SubmitResponseHandler } from "./";
 

@@ -2,10 +2,13 @@ import { useAlert, useResources } from "../hooks/";
 import { ItemRow, LoadingSpinner, Pagination } from "./";
 import { Fragment, PropsWithChildren, ReactElement, useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { Included, ResourceObject } from "ts-jsonapi-form/jsonapi/model/";
+import {
+  Included,
+  ResourceObject,
+} from "@vloryan/ts-jsonapi-form/jsonapi/model/";
 import { useSearch } from "wouter";
 
-import { extractFetchOpts, FetchOpts } from "ts-jsonapi-form/jsonapi/";
+import { extractFetchOpts, FetchOpts } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { QueryKey } from "@tanstack/query-core";
 
 export interface ItemGroup {

@@ -9,8 +9,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 import {
   CollectionResourceDoc,
   ResourceObject,
-} from "ts-jsonapi-form/jsonapi/model/";
-import { MEDIA_TYPE } from "ts-jsonapi-form/jsonapi/";
+} from "@vloryan/ts-jsonapi-form/jsonapi/model/";
+import { MEDIA_TYPE } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { LoadingSpinner } from "../";
 import { LabeledGroup } from "./Label";
 

@@ -1,9 +1,12 @@
 import { ItemList, Toolbar } from "../components/";
 import { PropsWithChildren, ReactElement } from "react";
 import { useLocation } from "wouter";
-import { ObjectForm } from "ts-jsonapi-form/form/";
-import { Included, ResourceObject } from "ts-jsonapi-form/jsonapi/model/";
-import { FetchOpts } from "ts-jsonapi-form/jsonapi/";
+import { ObjectForm } from "@vloryan/ts-jsonapi-form/form/";
+import {
+  Included,
+  ResourceObject,
+} from "@vloryan/ts-jsonapi-form/jsonapi/model/";
+import { FetchOpts } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { joinPath } from "../functions";
 import { QueryKey } from "@tanstack/query-core";
 import { Config } from "../Config";

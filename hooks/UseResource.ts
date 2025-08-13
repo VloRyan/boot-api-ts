@@ -1,8 +1,8 @@
-import { FetchOpts, fetchResource } from "ts-jsonapi-form/jsonapi/";
+import { FetchOpts, fetchResource } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import {
   CollectionResourceDoc,
   SingleResourceDoc,
-} from "ts-jsonapi-form/jsonapi/model/";
+} from "@vloryan/ts-jsonapi-form/jsonapi/model/";
 import { useQuery } from "@tanstack/react-query";
 import type { QueryKey } from "@tanstack/query-core";
 

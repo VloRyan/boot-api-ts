@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useLocation, useSearch } from "wouter";
 import { PropsWithChildren, ReactElement } from "react";
-import { SingleObjectForm } from "ts-jsonapi-form/form/ObjectForm";
-import { extractFilter } from "ts-jsonapi-form/jsonapi/Request";
-import { ObjectLike } from "ts-jsonapi-form/jsonapi/model/Types";
+import { SingleObjectForm } from "@vloryan/ts-jsonapi-form/form/ObjectForm";
+import { extractFilter } from "@vloryan/ts-jsonapi-form/jsonapi/Request";
+import { ObjectLike } from "@vloryan/ts-jsonapi-form/jsonapi/model/Types";
 
 export const SearchBar = ({
   show,

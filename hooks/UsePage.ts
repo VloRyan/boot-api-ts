@@ -1,5 +1,5 @@
-import { Page } from "ts-jsonapi-form/jsonapi/JsonApi";
-import { extractPage } from "ts-jsonapi-form/jsonapi/Request";
+import { Page } from "@vloryan/ts-jsonapi-form/jsonapi/JsonApi";
+import { extractPage } from "@vloryan/ts-jsonapi-form/jsonapi/Request";
 import { useSearch } from "wouter";
 
 export const usePage = () => {
