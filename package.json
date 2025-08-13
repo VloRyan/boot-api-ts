@@ -4,8 +4,9 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
-    "fmt": "prettier **/*.{js,ts,jsx,tsx,cjs,cts,mjs,mts,yml,yaml} --write --no-error-on-unmatched-pattern",
+    "lint": "eslint . --config=./eslint.config.mts --report-unused-disable-directives --max-warnings 0",
+    "fmt": "prettier **/*.{js,ts,jsx,tsx,cjs,cts,mjs,mts,yml,yaml} --check --no-error-on-unmatched-pattern",
+    "fmt-write": "prettier **/*.{js,ts,jsx,tsx,cjs,cts,mjs,mts,yml,yaml} --write --no-error-on-unmatched-pattern",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
@@ -28,7 +29,7 @@
     "@types/react": "^19.1.8",
     "@vitest/coverage-v8": "^3.2.3",
     "eslint": "^9.29.0",
-    "jiti": "^2.4.2",
+    "jiti": "^2.5.1",
     "jsdom": "^26.1.0",
     "prettier": "3.1.1",
     "typescript": "~5.8.3",
