@@ -2,6 +2,14 @@
   "name": "@vloryan/boot-api-ts",
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://github.com/VloRyan/boot-api-ts#readme",
+  "bugs": {
+    "url": "https://github.com/VloRyan/boot-api-ts/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VloRyan/boot-api-ts.git"
+  },
   "scripts": {
     "build": "tsc",
     "lint": "eslint . --config=./eslint.config.mts --report-unused-disable-directives --max-warnings 0",
