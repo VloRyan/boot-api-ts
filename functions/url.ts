@@ -1,9 +1,5 @@
-import { SERVER_API_PATH } from "../Config.ts";
 import { trimPrefix, trimSuffix } from "./";
 
-export function ApiToUiUrl(apiUrl: string) {
-  return apiUrl.replace(SERVER_API_PATH, "").replace("v1/", "");
-}
 const protocolRegEx = /\w+:\/\//g;
 export function joinPath(base: string, ...elements: string[]) {
   let prefix = "";

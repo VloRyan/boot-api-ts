@@ -1,4 +1,3 @@
-export const SERVER_API_PATH = import.meta.env.PROD ? "" : "/api/";
 class Configuration {
   private static _instance: Configuration;
   public ApiPath: string;
