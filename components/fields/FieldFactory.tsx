@@ -101,7 +101,7 @@ export class BootstrapFieldFactory implements FieldFactory {
   };
 
   Select = (props: SelectFieldColProps): JSX.Element => {
-    const fieldProps = this.setupField<string>(props.name);
+    const fieldProps = this.setupField(props.name);
     if (props.onChange) {
       const origOnChange = props.onChange;
       props = {
@@ -181,10 +181,10 @@ export class BootstrapFieldFactory implements FieldFactory {
     return <LabeledGroup {...props} />;
   };
 
-  setupField<T>(name: string): {
+  setupField(name: string): {
     name: string;
     onChange: React.ChangeEventHandler<FormControlElement>;
-    defaultValue: T;
+    defaultValue: string | number | readonly string[] | undefined;
   } {
     let value = this.form.getValue(name);
     const typesToCheck = ["string", "number", "boolean"];
