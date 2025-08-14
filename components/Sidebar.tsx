@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Sidebar.css";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Link } from "wouter";
+import { JSX } from "react";
 
 export class Menu {
   title: string = "";
@@ -33,11 +34,15 @@ export interface SidebarProps {
   appName: string;
   logo: string;
   menus: Menu[];
+  footer?: JSX.Element;
 }
 
 export const Sidebar = (props: SidebarProps) => {
   return (
-    <nav id="sidebar" className="px-1 border-end border-light-subtle rounded">
+    <nav
+      id="sidebar"
+      className="px-1 border-end border-bottom border-light-subtle rounded"
+    >
       <div className="mb-4">
         <Link to="/" className="nav-brand text-decoration-none">
           <div className="text-center">
@@ -86,6 +91,11 @@ export const Sidebar = (props: SidebarProps) => {
           })}
         </ul>
       </div>
+      {props.footer ? (
+        <div id="sidebar-footer" className="pb-1">
+          {props.footer}
+        </div>
+      ) : null}
     </nav>
   );
 };
