@@ -1,35 +1,19 @@
-import { ItemList, Toolbar } from "../components/";
-import { PropsWithChildren, ReactElement } from "react";
+import { ItemList, ItemListProps, Toolbar } from "../components/";
+import { ReactElement } from "react";
 import { useLocation } from "wouter";
 import { ObjectForm } from "@vloryan/ts-jsonapi-form/form/";
-import {
-  Included,
-  ResourceObject,
-} from "@vloryan/ts-jsonapi-form/jsonapi/model/";
-import { FetchOpts } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { joinPath } from "../functions";
-import { QueryKey } from "@tanstack/query-core";
 import { Config } from "../Config";
 
-export interface ItemListPageProps {
-  itemCellsFunc?: (
-    obj: ResourceObject,
-    includes: Included,
-    queryKey: QueryKey,
-  ) => ReactElement;
-  opts?: FetchOpts;
+export interface ItemListPageProps
+  extends Omit<ItemListProps, "locationUrl" | "resourcesUrl"> {
   searchProperty?: string;
   searchBarContent?: (form: ObjectForm) => ReactElement;
 }
 
-export const ItemListPage = ({
-  opts,
-  itemCellsFunc,
-  searchProperty,
-  searchBarContent,
-}: PropsWithChildren<ItemListPageProps>) => {
+export const ItemListPage = (props: ItemListPageProps) => {
   const [location] = useLocation();
-  const resourcesUrl = joinPath(Config.ApiPath, location);
+  const { searchProperty, searchBarContent, ...itemListProps } = props;
   return (
     <>
       <Toolbar
@@ -38,10 +22,9 @@ export const ItemListPage = ({
         searchBarContent={searchBarContent}
       ></Toolbar>
       <ItemList
-        resourcesUrl={resourcesUrl}
         locationUrl={location}
-        itemCellsFunc={itemCellsFunc}
-        opts={opts}
+        resourcesUrl={joinPath(Config.ApiPath, location)}
+        {...itemListProps}
       />
     </>
   );

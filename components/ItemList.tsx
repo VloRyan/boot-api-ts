@@ -1,6 +1,6 @@
 import { useAlert, useResources } from "../hooks/";
 import { ItemRow, LoadingSpinner, Pagination } from "./";
-import { Fragment, PropsWithChildren, ReactElement, useEffect } from "react";
+import { Fragment, ReactElement, useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import {
   Included,
@@ -35,7 +35,7 @@ export const ItemList = ({
   opts,
   itemCellsFunc,
   groupFunc,
-}: PropsWithChildren<ItemListProps>) => {
+}: ItemListProps) => {
   const searchString = useSearch();
   const queryOpts = extractFetchOpts(searchString, opts);
   const { doc, isLoading, error, queryKey } = useResources(
