@@ -29,7 +29,7 @@ export const ItemListPage = ({
   searchBarContent,
 }: PropsWithChildren<ItemListPageProps>) => {
   const [location] = useLocation();
-  const resourcesUrl = joinPath(Config.ApiPath, `/v1/`, location);
+  const resourcesUrl = joinPath(Config.ApiPath, location);
   return (
     <>
       <Toolbar
