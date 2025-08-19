@@ -1,9 +1,19 @@
-import { Spinner } from "react-bootstrap";
+import { Container, Spinner } from "react-bootstrap";
+import { SpinnerProps } from "react-bootstrap/Spinner";
 
-export const LoadingSpinner = ({ size }: { size?: "sm" }) => (
-  <div className="container d-flex justify-content-center">
-    <Spinner size={size} animation="border" role="status">
+export interface LoadingSpinnerProps extends SpinnerProps {
+  centered?: boolean;
+}
+export const LoadingSpinner = (props: LoadingSpinnerProps) => {
+  const spinner = (
+    <Spinner {...props}>
       <span className="visually-hidden">Loading...</span>
     </Spinner>
-  </div>
-);
+  );
+  if (props.centered === false) {
+    return spinner;
+  }
+  return (
+    <Container className="d-flex justify-content-center">{spinner}</Container>
+  );
+};
