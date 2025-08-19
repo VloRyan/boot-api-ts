@@ -13,8 +13,8 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint . --config=./eslint.config.mts --report-unused-disable-directives --max-warnings 0",
-    "fmt": "prettier **/*.{js,ts,jsx,tsx,cjs,cts,mjs,mts,yml,yaml} --check --no-error-on-unmatched-pattern",
-    "fmt-write": "prettier **/*.{js,ts,jsx,tsx,cjs,cts,mjs,mts,yml,yaml} --write --no-error-on-unmatched-pattern",
+    "fmt": "prettier \"**/*.{js,ts,jsx,tsx,cjs,cts,mjs,mts,yml,yaml}\" --check --no-error-on-unmatched-pattern",
+    "fmt-write": "prettier \"**/*.{js,ts,jsx,tsx,cjs,cts,mjs,mts,yml,yaml}\" --write --no-error-on-unmatched-pattern",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
