@@ -31,7 +31,7 @@ export const SearchBar = ({
   }
   const searchForm = new SingleObjectForm({
     name: "FilterForm",
-    object: filter,
+    object: filter ?? {},
     id: "FilterForm",
   });
   return (

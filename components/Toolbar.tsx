@@ -31,7 +31,7 @@ export interface ToolbarProps {
 
 export function Toolbar(props: ToolbarProps) {
   const searchString = useSearch();
-  const filter = extractFilter(searchString);
+  let filter = extractFilter(searchString);
   const [location, setLocation] = useLocation();
   const searchFieldRef = useRef<HTMLInputElement>(null);
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -69,10 +69,17 @@ export function Toolbar(props: ToolbarProps) {
                   placeholder="Search..."
                   aria-label="Search"
                   aria-describedby="button-search"
-                  defaultValue={filter[props.searchProperty] as string}
+                  defaultValue={
+                    filter
+                      ? (filter[props.searchProperty] as string)
+                      : undefined
+                  }
                   onKeyDown={(e) => {
                     if (e.code !== "Enter") {
                       return;
+                    }
+                    if (!filter) {
+                      filter = {};
                     }
                     if (e.currentTarget.value) {
                       filter[props.searchProperty!] = e.currentTarget.value;
@@ -85,13 +92,12 @@ export function Toolbar(props: ToolbarProps) {
                   }}
                 />
                 <Button
-                  variant={
-                    Object.keys(filter).length === 0
-                      ? "outline-primary"
-                      : "primary"
-                  }
+                  variant={filter ? "primary" : "outline-primary"}
                   id="button-search"
                   onClick={() => {
+                    if (!filter) {
+                      filter = {};
+                    }
                     if (searchFieldRef.current?.value) {
                       filter[props.searchProperty!] =
                         searchFieldRef.current?.value ?? "";
@@ -106,14 +112,9 @@ export function Toolbar(props: ToolbarProps) {
                   <FontAwesomeIcon icon={faMagnifyingGlass} />
                 </Button>
               </InputGroup>
-            ) : null}
-            {props.searchBarContent ? (
+            ) : props.searchBarContent ? (
               <Button
-                variant={
-                  Object.keys(filter).length === 0
-                    ? "outline-primary"
-                    : "primary"
-                }
+                variant={filter ? "primary" : "outline-primary"}
                 id="button-search"
                 onClick={() => setShowSearchBar(true)}
               >
