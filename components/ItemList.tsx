@@ -10,6 +10,7 @@ import { useSearch } from "wouter";
 
 import { extractFetchOpts, FetchOpts } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { QueryKey } from "@tanstack/query-core";
+import { extractPaginationMetaData } from "../functions";
 
 export interface ItemGroup {
   id: string;
@@ -59,7 +60,8 @@ export const ItemList = ({
       return <ItemRow object={obj} queryKey={queryKey} />;
     };
   }
-  const itemCount = doc?.meta ? (doc.meta["page[totalCount]"] as number) : 0;
+  const pageMetaData = extractPaginationMetaData(doc);
+  //const itemCount = doc?.meta ? (doc.meta["page[totalCount]"] as number) : 0;
   const itemGroups: ItemGroup[] = groupFunc
     ? groupFunc(doc?.data ? doc?.data : [])
     : [{ id: "0", data: doc?.data ? doc.data : null }];
@@ -79,16 +81,14 @@ export const ItemList = ({
           </Fragment>
         );
       })}
-      {queryOpts.page?.limit && (
+      {pageMetaData && (
         <Row className="mt-2">
           <Col className="text-center">
             <Pagination
               location={locationUrl}
               searchString={searchString}
-              offset={queryOpts.page?.offset ? queryOpts.page?.offset : 0}
-              totalPages={Math.ceil(
-                itemCount / (queryOpts.page?.limit ? queryOpts.page?.limit : 0),
-              )}
+              offset={pageMetaData.offset}
+              totalPages={Math.ceil(pageMetaData.total / pageMetaData.limit)}
             />
           </Col>
         </Row>
