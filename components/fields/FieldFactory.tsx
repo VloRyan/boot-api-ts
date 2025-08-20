@@ -24,6 +24,7 @@ import { fetchResource } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { LoadingSpinner } from "../";
 import { ObjectLike } from "@vloryan/ts-jsonapi-form/jsonapi/model/Types";
 import { ColProps } from "react-bootstrap/Col";
+import { isResourceObject } from "@vloryan/ts-jsonapi-form/jsonapi/model";
 
 export type FormControlElement =
   | HTMLInputElement
@@ -122,7 +123,13 @@ export class BootstrapFieldFactory implements FieldFactory {
   };
 
   Lookup = (props: LookupFieldColProps) => {
-    const id: string | undefined = this.form.getValue(props.name + ".id");
+    const value = this.form.getValue(props.name);
+    const id: string | undefined =
+      value && (typeof value == "string" || typeof value == "number")
+        ? value
+        : value && isResourceObject(value)
+          ? value.id
+          : undefined;
     const [obj, setObj] = useState<ResourceObject | null>(null);
     useEffect(() => {
       if (!id) {
