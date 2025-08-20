@@ -3,9 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useLocation, useSearch } from "wouter";
 import { PropsWithChildren, ReactElement } from "react";
-import { SingleObjectForm } from "@vloryan/ts-jsonapi-form/form/ObjectForm";
-import { extractFilter } from "@vloryan/ts-jsonapi-form/jsonapi/Request";
-import { ObjectLike } from "@vloryan/ts-jsonapi-form/jsonapi/model/Types";
+import { SingleObjectForm } from "@vloryan/ts-jsonapi-form/form/";
+import { extractFilter } from "@vloryan/ts-jsonapi-form/jsonapi/";
+import {
+  ObjectLike,
+  isResourceObject,
+} from "@vloryan/ts-jsonapi-form/jsonapi/model";
+import { ResourceIdentifierObject } from "@vloryan/ts-jsonapi-form/jsonapi/model/";
 
 export const SearchBar = ({
   show,
@@ -72,9 +76,12 @@ export const SearchBar = ({
 function toQueryString(f: ObjectLike): string {
   let params = "";
   for (const k in f) {
-    const value = f[k];
+    let value = f[k];
     if (!value) {
       continue;
+    }
+    if (isResourceObject(value as ObjectLike)) {
+      value = (f[k] as unknown as ResourceIdentifierObject).id;
     }
     if (params.length > 0) {
       params += "&";

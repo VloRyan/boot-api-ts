@@ -155,13 +155,13 @@ export class BootstrapFieldFactory implements FieldFactory {
             defaultValue={obj}
             onSelectionChange={(selected) => {
               setObj(() => {
-                let newValue: ResourceIdentifierObject | null = null;
-                if (selected) {
-                  newValue = {
-                    id: selected.id,
-                    type: selected.type,
-                  };
-                }
+                let newValue: ResourceIdentifierObject | null = selected
+                  ? ({
+                      id: selected.id,
+                      type: selected.type,
+                    } satisfies ResourceIdentifierObject)
+                  : null;
+
                 this.form.setValue(
                   props.name,
                   newValue as unknown as ObjectLike,
