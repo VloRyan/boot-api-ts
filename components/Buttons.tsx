@@ -15,7 +15,6 @@ import { joinPath } from "../functions";
 import { Config } from "../Config.ts";
 import { useAlert } from "../hooks";
 import { useQueryClient } from "@tanstack/react-query";
-import { ResourceObject } from "@vloryan/ts-jsonapi-form/jsonapi/model/";
 import { QueryKey } from "@tanstack/query-core";
 
 interface IconButtonProps extends ButtonProps {
@@ -43,21 +42,20 @@ export function DeleteButton(props: ButtonProps) {
   );
 }
 
-export interface DeleteResourceButtonProps extends Omit<ButtonProps, "onClick"> {
-  object: ResourceObject;
+export interface DeleteResourceButtonProps
+  extends Omit<ButtonProps, "onClick"> {
+  url: string;
   queryKey: QueryKey;
 }
 
 export function DeleteResourceButton(props: DeleteResourceButtonProps) {
   const { addApiErrorAlerts } = useAlert();
   const queryClient = useQueryClient();
-  const { object, queryKey, ...buttonProps } = props;
+  const { url, queryKey, ...buttonProps } = props;
   return (
     <DeleteButton
       onClick={() => {
-        deleteResource(
-          joinPath(Config.ApiPath, object.links!.self as string),
-        ).then(
+        deleteResource(joinPath(Config.ApiPath, url)).then(
           () => {
             queryClient.invalidateQueries({ queryKey }).then();
           },

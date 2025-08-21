@@ -30,16 +30,19 @@ export function ItemRow({ object, queryKey }: ListItemCardProps) {
             : object.id}
         </Link>
       </Col>
-      <ItemActionCol object={object} queryKey={queryKey} />
+      <ItemActionCol
+        objectUrl={joinPath(location, object.id)}
+        queryKey={queryKey}
+      />
     </>
   );
 }
 interface ItemActionColProps {
-  object: ResourceObject;
+  objectUrl: string;
   queryKey: QueryKey;
 }
 export const ItemActionCol = ({
-  object,
+  objectUrl,
   queryKey,
   children,
 }: PropsWithChildren<ItemActionColProps>) => {
@@ -48,7 +51,7 @@ export const ItemActionCol = ({
       {Children.map(children, (child) => (
         <div className="me-1">{child}</div>
       ))}
-      <DeleteResourceButton object={object} queryKey={queryKey} size="sm" />
+      <DeleteResourceButton url={objectUrl} queryKey={queryKey} size="sm" />
     </Col>
   );
 };

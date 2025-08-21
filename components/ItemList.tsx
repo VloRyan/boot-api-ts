@@ -61,7 +61,7 @@ export const ItemList = ({
     };
   }
   const pageMetaData = extractPaginationMetaData(doc);
-  //const itemCount = doc?.meta ? (doc.meta["page[totalCount]"] as number) : 0;
+
   const itemGroups: ItemGroup[] = groupFunc
     ? groupFunc(doc?.data ? doc?.data : [])
     : [{ id: "0", data: doc?.data ? doc.data : null }];
