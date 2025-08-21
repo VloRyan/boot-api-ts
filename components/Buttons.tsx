@@ -5,7 +5,7 @@ import {
   faPlus,
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "react-bootstrap";
+import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { ButtonProps } from "react-bootstrap/Button";
 
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -23,6 +23,18 @@ interface IconButtonProps extends ButtonProps {
 }
 
 export function IconButton(props: PropsWithChildren<IconButtonProps>) {
+  if (props.disabled && props.title) {
+    return (
+      <OverlayTrigger overlay={<Tooltip>{props.title}</Tooltip>}>
+        <span className="d-inline-block">
+          <Button {...props}>
+            <FontAwesomeIcon icon={props.icon}></FontAwesomeIcon>
+            {props.children}
+          </Button>
+        </span>
+      </OverlayTrigger>
+    );
+  }
   return (
     <Button {...props}>
       <FontAwesomeIcon icon={props.icon} title={props.title}></FontAwesomeIcon>
