@@ -10,6 +10,13 @@ import {
   isResourceObject,
 } from "@vloryan/ts-jsonapi-form/jsonapi/model";
 import { ResourceIdentifierObject } from "@vloryan/ts-jsonapi-form/jsonapi/model/";
+export type SearchBarProps = PropsWithChildren<{
+  show: boolean;
+  setShow: (show: boolean) => void;
+  content: (form: SingleObjectForm<ObjectLike>) => ReactElement;
+  filter?: ObjectLike;
+  onBeforeSearch?: (form: SingleObjectForm<ObjectLike>) => void;
+}>;
 
 export const SearchBar = ({
   show,
@@ -17,13 +24,7 @@ export const SearchBar = ({
   content,
   filter,
   onBeforeSearch,
-}: PropsWithChildren<{
-  show: boolean;
-  setShow: (show: boolean) => void;
-  content: (form: SingleObjectForm<ObjectLike>) => ReactElement;
-  filter?: ObjectLike;
-  onBeforeSearch?: (form: SingleObjectForm<ObjectLike>) => void;
-}>) => {
+}: SearchBarProps) => {
   const [location, setLocation] = useLocation();
   const searchString = useSearch();
   if (!filter) {

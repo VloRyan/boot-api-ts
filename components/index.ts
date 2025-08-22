@@ -3,7 +3,7 @@ export * from "./Bagde";
 export * from "./Buttons";
 export * from "./ErrorBoundary";
 export * from "./ItemList";
-export * from "./ItemRow";
+export * from "./ItemCells.tsx";
 export * from "./LoadingSpinner";
 export * from "./Pagination";
 export * from "./SearchBar";

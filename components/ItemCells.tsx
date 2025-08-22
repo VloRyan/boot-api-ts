@@ -10,12 +10,12 @@ import { joinPath } from "../functions";
 import { QueryKey } from "@tanstack/query-core";
 import { Link, useLocation } from "wouter";
 
-export interface ListItemCardProps {
+export interface ItemCellsProps {
   object: ResourceObject;
   queryKey: QueryKey;
 }
 
-export function ItemRow({ object, queryKey }: ListItemCardProps) {
+export function ItemCells({ object, queryKey }: ItemCellsProps) {
   if (!object) {
     return null;
   }

@@ -1,5 +1,5 @@
 import { useAlert, useResources } from "../hooks/";
-import { ItemRow, LoadingSpinner, Pagination } from "./";
+import { ItemCells, LoadingSpinner, Pagination } from "./";
 import { Fragment, ReactElement, useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import {
@@ -17,15 +17,16 @@ export interface ItemGroup {
   headerFunc?: (group: ItemGroup) => ReactElement;
   data: ResourceObject[] | null;
 }
+export type ItemCellsFunc = (
+  obj: ResourceObject,
+  includes: Included,
+  queryKey: QueryKey,
+) => ReactElement;
 
 export interface ItemListProps {
   resourcesUrl: string;
   locationUrl: string;
-  itemCellsFunc?: (
-    obj: ResourceObject,
-    includes: Included,
-    queryKey: QueryKey,
-  ) => ReactElement;
+  cells?: ItemCellsFunc;
   opts?: FetchOpts;
   groupFunc?: (objs: ResourceObject[]) => ItemGroup[];
 }
@@ -34,7 +35,7 @@ export const ItemList = ({
   resourcesUrl,
   locationUrl,
   opts,
-  itemCellsFunc,
+  cells,
   groupFunc,
 }: ItemListProps) => {
   const searchString = useSearch();
@@ -55,10 +56,8 @@ export const ItemList = ({
   if (isLoading) {
     return <LoadingSpinner />;
   }
-  if (!itemCellsFunc) {
-    itemCellsFunc = (obj, queryKey) => {
-      return <ItemRow object={obj} queryKey={queryKey} />;
-    };
+  if (!cells) {
+    cells = (obj, queryKey) => <ItemCells object={obj} queryKey={queryKey} />;
   }
   const pageMetaData = extractPaginationMetaData(doc);
 
@@ -74,7 +73,7 @@ export const ItemList = ({
             <GroupHeader group={group} />
             <GroupDataRows
               group={group}
-              itemCellsFunc={itemCellsFunc}
+              cells={cells}
               queryKey={queryKey}
               included={doc?.included}
             />
@@ -98,16 +97,12 @@ export const ItemList = ({
 };
 const GroupDataRows = ({
   group,
-  itemCellsFunc,
+  cells,
   queryKey,
   included,
 }: {
   group: ItemGroup;
-  itemCellsFunc: (
-    obj: ResourceObject,
-    includes: Included,
-    queryKey: QueryKey,
-  ) => ReactElement;
+  cells: ItemCellsFunc;
   queryKey: QueryKey;
   included?: Included;
 }) => {
@@ -120,7 +115,7 @@ const GroupDataRows = ({
         (index % 2 === 0 ? "" : " bg-body-secondary")
       }
     >
-      {itemCellsFunc(item, included || [], queryKey)}
+      {cells(item, included || [], queryKey)}
     </Row>
   ));
 };
