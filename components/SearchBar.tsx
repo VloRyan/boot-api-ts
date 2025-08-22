@@ -87,7 +87,7 @@ function toQueryString(f: ObjectLike): string {
     if (params.length > 0) {
       params += "&";
     }
-    params += "filter[" + k + "]=" + value;
+    params += "filter[" + k + "]=" + encodeURIComponent(value as string);
   }
   return params.length > 0 ? "?" + params : "";
 }
