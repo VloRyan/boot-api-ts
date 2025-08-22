@@ -13,13 +13,10 @@ import { JSX, ReactElement, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import {
-  extractFilter,
-  toParamFamily,
-} from "@vloryan/ts-jsonapi-form/jsonapi/";
+import { extractFilter } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { ObjectForm } from "@vloryan/ts-jsonapi-form/form/";
 import { ObjectLike } from "@vloryan/ts-jsonapi-form/jsonapi/model/";
-import { trimSuffix } from "../functions";
+import { trimSuffix, toParamFamily } from "../functions";
 
 export interface ToolbarProps {
   createButton?: ButtonProps;
