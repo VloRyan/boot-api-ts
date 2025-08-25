@@ -4,13 +4,8 @@ import { JSX, useState } from "react";
 
 import { LabeledGroup, LabeledGroupPropsWithOnChange } from "./";
 
-type DateFormat = "DateOnly" | "ISO 8601";
-export interface DateFieldProps extends LabeledGroupPropsWithOnChange {
-  valueFormat?: DateFormat;
-}
-export function DateField(props: DateFieldProps): JSX.Element {
-  const { name, defaultValue, onChange, required, valueFormat, ...groupProps } =
-    props;
+export function DateField(props: LabeledGroupPropsWithOnChange): JSX.Element {
+  const { name, defaultValue, onChange, required, ...groupProps } = props;
   const [invalid, setInvalid] = useState(false);
   const dateValue = defaultValue ? new Date(defaultValue as string) : undefined;
   const value =
@@ -40,17 +35,6 @@ export function DateField(props: DateFieldProps): JSX.Element {
   );
 }
 
-function formatDate(value?: string, format?: DateFormat): string {
-  if (!value) {
-    return "";
-  }
-  switch (format ? format : "DateOnly") {
-    case "ISO 8601": // remove millis
-      return new Date(value).toISOString().replace(/\.\d+/, "");
-    case "DateOnly":
-      return value;
-  }
-}
 function formatLocalDate(date: Date): string {
   const day = date.getDate().toString().padStart(2, "0");
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -92,6 +76,3 @@ export function DateTimeField(
     </LabeledGroup>
   );
 }
-export const exportedForTesting = {
-  formatDate,
-};

@@ -4,10 +4,10 @@ import {
   CheckboxField,
   CheckboxProps,
   DateField,
-  DateFieldProps,
   DateTimeField,
   LabeledGroup,
   LabeledGroupProps,
+  LabeledGroupPropsWithOnChange,
   NumberField,
   ResourceObjectLookupField,
   SelectField,
@@ -54,7 +54,7 @@ export interface FieldFactory {
   Text(props: FieldColProps): JSX.Element;
   TextArea(props: FieldColProps): JSX.Element;
   Number(props: NumberFieldColProps): JSX.Element;
-  Date(props: DateFieldProps): JSX.Element;
+  Date(props: LabeledGroupPropsWithOnChange): JSX.Element;
   DateTime(props: FieldColProps): JSX.Element;
   Select(props: SelectFieldColProps): JSX.Element;
   CheckBox(props: FieldColProps): JSX.Element;
@@ -89,7 +89,7 @@ export class BootstrapFieldFactory implements FieldFactory {
     return <CheckboxField {...props} {...setting} />;
   };
 
-  Date = (props: DateFieldProps): JSX.Element => {
+  Date = (props: LabeledGroupPropsWithOnChange): JSX.Element => {
     return <DateField {...props} {...this.setupField(props.name)} />;
   };
 
@@ -162,7 +162,7 @@ export class BootstrapFieldFactory implements FieldFactory {
             defaultValue={obj}
             onSelectionChange={(selected) => {
               setObj(() => {
-                let newValue: ResourceIdentifierObject | null = selected
+                const newValue: ResourceIdentifierObject | null = selected
                   ? ({
                       id: selected.id,
                       type: selected.type,
