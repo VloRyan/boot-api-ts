@@ -2,9 +2,11 @@
 
 ![BootApiTS Logo](.github/assets/logo.png)
 
-**BootApiTS** is a reusable UI component framework built with **TypeScript**, designed to work seamlessly with **Bootstrap** and optimized for **JSON:API-based** applications.
+**BootApiTS** is a reusable UI component framework built with **TypeScript**, designed to work seamlessly with \*
+\*Bootstrap** and optimized for **JSON:API-based\*\* applications.
 
-The name is a playful nod to the classic "TS = Tomato + Salad" combo — bringing freshness and flavor to your frontend stack.
+The name is a playful nod to the classic "TS = Tomato + Salad" combo — bringing freshness and flavor to your frontend
+stack.
 
 ---
 
@@ -20,11 +22,62 @@ The name is a playful nod to the classic "TS = Tomato + Salad" combo — bringin
 
 ## 📦 Installation
 
-TBD
+```shell
+npm install https://github.com/VloRyan/boot-api-tsnpm install https://github.com/VloRyan/boot-api-ts
+```
 
 ## 🛠️ Usage Example
 
-TBD
+```tsx
+import { useResource, useResourceObjectForm, } from "@vloryan/boot-api-ts/hooks/";
+import { useLocation } from "wouter";
+import { ItemPage } from "@vloryan/boot-api-ts/pages/";
+import { Container, Row } from "react-bootstrap";
+import { ObjectForm } from "@vloryan/ts-jsonapi-form/form/";
+import { BootstrapFieldFactory } from "@vloryan/boot-api-ts/components/fields/";
+
+export function Page() {
+  const [location] = useLocation();
+  const { doc, isLoading, error, queryKey } = useResource(apiPath(location));
+  const form = useResourceObjectForm({
+    id: "form",
+    document: doc,
+    queryKey: queryKey,
+    apiUrl: "https://my-api.local",
+  });
+  return (
+    <ItemPage error={error} isLoading={isLoading} formId={form.id}>
+      <form {...form.setup()}>
+        <Editor form={form} />
+      </form>
+    </ItemPage>
+  );
+}
+
+export const Editor = ({ form }: { form: ObjectForm }) => {
+  const fields = new BootstrapFieldFactory(form);
+  return (
+    <Container fluid>
+      <Row>
+        <fields.Text label="Name" name="name" />
+        <fields.Number label="Age" name="age" />
+        <fields.TextArea label="Description" name="description" />
+        <fields.Select
+          label="Color"
+          name="color"
+          options={
+            new Map([
+              ["r", "Red"],
+              ["g", "Green"],
+              ["b", "Blue"],
+            ])
+          }
+        />
+      </Row>
+    </Container>
+  );
+};
+```
 
 ## 📌 Project Status
 
