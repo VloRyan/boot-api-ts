@@ -20,7 +20,7 @@ export interface UseResourceObjectFormProps {
   apiUrl?: string;
 }
 
-export const useDocumentFormForm = (props: UseResourceObjectFormProps) => {
+export const useDocumentForm = (props: UseResourceObjectFormProps) => {
   const queryClient = useQueryClient();
   const defaultSubmitResponseHandler = useAlertSubmitResponseHandler();
   return new DocumentForm({
