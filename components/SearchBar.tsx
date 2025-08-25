@@ -3,9 +3,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useLocation, useSearch } from "wouter";
 import { PropsWithChildren, ReactElement } from "react";
-import { SingleObjectForm } from "@vloryan/ts-jsonapi-form/form/ObjectForm";
-import { extractFilter } from "@vloryan/ts-jsonapi-form/jsonapi/Request";
-import { ObjectLike } from "@vloryan/ts-jsonapi-form/jsonapi/model/Types";
+import { SingleObjectForm } from "@vloryan/ts-jsonapi-form/form/";
+import { extractFilter } from "@vloryan/ts-jsonapi-form/jsonapi/";
+import {
+  ObjectLike,
+  isResourceObject,
+} from "@vloryan/ts-jsonapi-form/jsonapi/model";
+import { ResourceIdentifierObject } from "@vloryan/ts-jsonapi-form/jsonapi/model/";
+export type SearchBarProps = PropsWithChildren<{
+  show: boolean;
+  setShow: (show: boolean) => void;
+  content: (form: SingleObjectForm<ObjectLike>) => ReactElement;
+  filter?: ObjectLike;
+  onBeforeSearch?: (form: SingleObjectForm<ObjectLike>) => void;
+}>;
 
 export const SearchBar = ({
   show,
@@ -13,13 +24,7 @@ export const SearchBar = ({
   content,
   filter,
   onBeforeSearch,
-}: PropsWithChildren<{
-  show: boolean;
-  setShow: (show: boolean) => void;
-  content: (form: SingleObjectForm<ObjectLike>) => ReactElement;
-  filter?: ObjectLike;
-  onBeforeSearch?: (form: SingleObjectForm<ObjectLike>) => void;
-}>) => {
+}: SearchBarProps) => {
   const [location, setLocation] = useLocation();
   const searchString = useSearch();
   if (!filter) {
@@ -27,7 +32,7 @@ export const SearchBar = ({
   }
   const searchForm = new SingleObjectForm({
     name: "FilterForm",
-    object: filter,
+    object: filter ?? {},
     id: "FilterForm",
   });
   return (
@@ -72,14 +77,17 @@ export const SearchBar = ({
 function toQueryString(f: ObjectLike): string {
   let params = "";
   for (const k in f) {
-    const value = f[k];
+    let value = f[k];
     if (!value) {
       continue;
+    }
+    if (isResourceObject(value as ObjectLike)) {
+      value = (f[k] as unknown as ResourceIdentifierObject).id;
     }
     if (params.length > 0) {
       params += "&";
     }
-    params += "filter[" + k + "]=" + value;
+    params += "filter[" + k + "]=" + encodeURIComponent(value as string);
   }
   return params.length > 0 ? "?" + params : "";
 }

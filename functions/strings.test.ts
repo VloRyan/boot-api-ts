@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { capitalize, trimPrefix, trimSuffix } from "./";
+import { capitalize, ellipse, trimPrefix, trimSuffix } from "./";
 
 describe("capitalize", () => {
   it.each([
@@ -28,5 +28,14 @@ describe("trimSuffix", () => {
     ["text Suffix", "suffix", "text Suffix"],
   ])(`(%s, %s) => %s`, (text, suffix, expected) => {
     expect(trimSuffix(text, suffix)).toBe(expected);
+  });
+});
+
+describe("ellipse", () => {
+  it.each([
+    ["0123456789", 10, "0123456789"],
+    ["01234567891", 10, "0123456..."],
+  ])(`(%s, %s) => %s`, (text, length, expected) => {
+    expect(ellipse(text, length)).toBe(expected);
   });
 });

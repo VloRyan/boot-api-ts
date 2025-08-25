@@ -4,10 +4,10 @@ import {
   CheckboxField,
   CheckboxProps,
   DateField,
-  DateFieldProps,
   DateTimeField,
   LabeledGroup,
   LabeledGroupProps,
+  LabeledGroupPropsWithOnChange,
   NumberField,
   ResourceObjectLookupField,
   SelectField,
@@ -24,6 +24,7 @@ import { fetchResource } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { LoadingSpinner } from "../";
 import { ObjectLike } from "@vloryan/ts-jsonapi-form/jsonapi/model/Types";
 import { ColProps } from "react-bootstrap/Col";
+import { isResourceObject } from "@vloryan/ts-jsonapi-form/jsonapi/model";
 
 export type FormControlElement =
   | HTMLInputElement
@@ -53,7 +54,7 @@ export interface FieldFactory {
   Text(props: FieldColProps): JSX.Element;
   TextArea(props: FieldColProps): JSX.Element;
   Number(props: NumberFieldColProps): JSX.Element;
-  Date(props: DateFieldProps): JSX.Element;
+  Date(props: LabeledGroupPropsWithOnChange): JSX.Element;
   DateTime(props: FieldColProps): JSX.Element;
   Select(props: SelectFieldColProps): JSX.Element;
   CheckBox(props: FieldColProps): JSX.Element;
@@ -88,7 +89,7 @@ export class BootstrapFieldFactory implements FieldFactory {
     return <CheckboxField {...props} {...setting} />;
   };
 
-  Date = (props: DateFieldProps): JSX.Element => {
+  Date = (props: LabeledGroupPropsWithOnChange): JSX.Element => {
     return <DateField {...props} {...this.setupField(props.name)} />;
   };
 
@@ -122,7 +123,13 @@ export class BootstrapFieldFactory implements FieldFactory {
   };
 
   Lookup = (props: LookupFieldColProps) => {
-    const id: string | undefined = this.form.getValue(props.name + ".id");
+    const value = this.form.getValue(props.name);
+    const id: string | undefined =
+      value && (typeof value == "string" || typeof value == "number")
+        ? value
+        : value && isResourceObject(value)
+          ? value.id
+          : undefined;
     const [obj, setObj] = useState<ResourceObject | null>(null);
     useEffect(() => {
       if (!id) {
@@ -155,13 +162,13 @@ export class BootstrapFieldFactory implements FieldFactory {
             defaultValue={obj}
             onSelectionChange={(selected) => {
               setObj(() => {
-                let newValue: ResourceIdentifierObject | null = null;
-                if (selected) {
-                  newValue = {
-                    id: selected.id,
-                    type: selected.type,
-                  };
-                }
+                const newValue: ResourceIdentifierObject | null = selected
+                  ? ({
+                      id: selected.id,
+                      type: selected.type,
+                    } satisfies ResourceIdentifierObject)
+                  : null;
+
                 this.form.setValue(
                   props.name,
                   newValue as unknown as ObjectLike,

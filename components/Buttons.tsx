@@ -5,11 +5,17 @@ import {
   faPlus,
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "react-bootstrap";
+import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { ButtonProps } from "react-bootstrap/Button";
 
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { PropsWithChildren, Ref } from "react";
+import { deleteResource } from "@vloryan/ts-jsonapi-form/jsonapi/";
+import { joinPath } from "../functions";
+import { Config } from "../Config.ts";
+import { useAlert } from "../hooks";
+import { useQueryClient } from "@tanstack/react-query";
+import { QueryKey } from "@tanstack/query-core";
 
 interface IconButtonProps extends ButtonProps {
   icon: IconProp;
@@ -17,6 +23,18 @@ interface IconButtonProps extends ButtonProps {
 }
 
 export function IconButton(props: PropsWithChildren<IconButtonProps>) {
+  if (props.disabled && props.title) {
+    return (
+      <OverlayTrigger overlay={<Tooltip>{props.title}</Tooltip>}>
+        <span className="d-inline-block">
+          <Button {...props}>
+            <FontAwesomeIcon icon={props.icon}></FontAwesomeIcon>
+            {props.children}
+          </Button>
+        </span>
+      </OverlayTrigger>
+    );
+  }
   return (
     <Button {...props}>
       <FontAwesomeIcon icon={props.icon} title={props.title}></FontAwesomeIcon>
@@ -32,7 +50,32 @@ export function DeleteButton(props: ButtonProps) {
       title="Delete"
       variant="outline-danger"
       {...props}
-    ></IconButton>
+    />
+  );
+}
+
+export interface DeleteResourceButtonProps
+  extends Omit<ButtonProps, "onClick"> {
+  url: string;
+  queryKey: QueryKey;
+}
+
+export function DeleteResourceButton(props: DeleteResourceButtonProps) {
+  const { addApiErrorAlerts } = useAlert();
+  const queryClient = useQueryClient();
+  const { url, queryKey, ...buttonProps } = props;
+  return (
+    <DeleteButton
+      onClick={() => {
+        deleteResource(joinPath(Config.ApiPath, url)).then(
+          () => {
+            queryClient.invalidateQueries({ queryKey }).then();
+          },
+          (error) => addApiErrorAlerts(error),
+        );
+      }}
+      {...buttonProps}
+    />
   );
 }
 
@@ -45,7 +88,7 @@ export function CreateButton(props: ButtonProps) {
       type="button"
       variant="outline-primary"
       {...props}
-    ></IconButton>
+    />
   );
 }
 
@@ -58,7 +101,7 @@ export function SaveButton(props: ButtonProps) {
       variant="outline-primary"
       type={props.form ? "submit" : "button"}
       {...props}
-    ></IconButton>
+    />
   );
 }
 
@@ -71,6 +114,6 @@ export const EditButton = (props: ButtonProps) => {
       type="button"
       variant="outline-primary"
       {...props}
-    ></IconButton>
+    />
   );
 };

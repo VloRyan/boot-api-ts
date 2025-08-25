@@ -1,25 +1,21 @@
-import { DeleteButton } from "./";
+import { DeleteResourceButton } from "./";
 
 import { ResourceObject } from "@vloryan/ts-jsonapi-form/jsonapi/model";
-import { deleteResource } from "@vloryan/ts-jsonapi-form/jsonapi/";
 
 import { TypeIcon } from "./icons/";
-import { useAlert } from "../hooks/";
 
 import { Col } from "react-bootstrap";
 import { Children, PropsWithChildren } from "react";
-import { Config } from "../Config.ts";
 import { joinPath } from "../functions";
 import { QueryKey } from "@tanstack/query-core";
-import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 
-export interface ListItemCardProps {
+export interface ItemCellsProps {
   object: ResourceObject;
   queryKey: QueryKey;
 }
 
-export function ItemRow({ object, queryKey }: ListItemCardProps) {
+export function ItemCells({ object, queryKey }: ItemCellsProps) {
   if (!object) {
     return null;
   }
@@ -34,39 +30,28 @@ export function ItemRow({ object, queryKey }: ListItemCardProps) {
             : object.id}
         </Link>
       </Col>
-      <ItemActionCol object={object} queryKey={queryKey} />
+      <ItemActionCol
+        objectUrl={joinPath(location, object.id)}
+        queryKey={queryKey}
+      />
     </>
   );
 }
 interface ItemActionColProps {
-  object: ResourceObject;
+  objectUrl: string;
   queryKey: QueryKey;
 }
 export const ItemActionCol = ({
-  object,
+  objectUrl,
   queryKey,
   children,
 }: PropsWithChildren<ItemActionColProps>) => {
-  const { addApiErrorAlerts } = useAlert();
-  const queryClient = useQueryClient();
   return (
     <Col className="pe-0 d-flex justify-content-end">
       {Children.map(children, (child) => (
         <div className="me-1">{child}</div>
       ))}
-      <DeleteButton
-        size="sm"
-        onClick={() => {
-          deleteResource(
-            joinPath(Config.ApiPath, object.links!.self as string),
-          ).then(
-            () => {
-              queryClient.invalidateQueries({ queryKey }).then();
-            },
-            (error) => addApiErrorAlerts(error),
-          );
-        }}
-      ></DeleteButton>
+      <DeleteResourceButton url={objectUrl} queryKey={queryKey} size="sm" />
     </Col>
   );
 };

@@ -1,29 +1,35 @@
-import { Badge } from "react-bootstrap";
+import { Badge, BadgeProps } from "react-bootstrap";
 
-export type StatusType = "ok" | "warning" | "error" | "imported";
-export const StatusBadge = ({ status }: { status: StatusType }) => {
-  let bg, caption: string;
-  switch (status) {
-    case "ok":
-      bg = "success";
-      caption = "Ok";
-      break;
-    case "warning":
-      bg = "warning";
-      caption = "Warning";
-      break;
-    case "error":
-      bg = "danger";
-      caption = "Error";
-      break;
-    case "imported":
-      bg = "secondary";
-      caption = "Imported";
-      break;
+export type StatusType = "default" | "ok" | "warning" | "error" | "inactive";
+export interface StatusBadgeProps extends Omit<BadgeProps, "bg"> {
+  variant?: StatusType;
+}
+interface StatusBadgeVariant {
+  bg: string;
+  caption: string;
+}
+
+type StatusBadgeVariantsType = {
+  [key in StatusType]: StatusBadgeVariant;
+};
+
+const StatusBadgeVariants: StatusBadgeVariantsType = {
+  default: { bg: "primary", caption: "Default" },
+  ok: { bg: "success", caption: "Ok" },
+  warning: { bg: "warning", caption: "Warning" },
+  error: { bg: "danger", caption: "Error" },
+  inactive: { bg: "secondary", caption: "Inactive" },
+};
+
+export const StatusBadge = (props: StatusBadgeProps) => {
+  const { variant, children, ...badgeProps } = props;
+  if (badgeProps.pill === undefined) {
+    badgeProps.pill = true;
   }
+  const v = StatusBadgeVariants[variant ?? "default"];
   return (
-    <Badge bg={bg} pill>
-      {caption}
+    <Badge bg={v.bg} {...badgeProps}>
+      {children ?? v.caption}
     </Badge>
   );
 };

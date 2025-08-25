@@ -35,3 +35,10 @@ export function padLeft(
   }
   return s;
 }
+
+export function ellipse(text: string, maxLength: number): string {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength - 3) + "...";
+  }
+  return text;
+}
