@@ -29,7 +29,7 @@ npm install https://github.com/VloRyan/boot-api-tsnpm install https://github.com
 ## 🛠️ Usage Example
 
 ```tsx
-import { useResource, useResourceObjectForm, } from "@vloryan/boot-api-ts/hooks/";
+import { useResource, useDocumentForm, } from "@vloryan/boot-api-ts/hooks/";
 import { useLocation } from "wouter";
 import { ItemPage } from "@vloryan/boot-api-ts/pages/";
 import { Container, Row } from "react-bootstrap";
@@ -39,7 +39,7 @@ import { BootstrapFieldFactory } from "@vloryan/boot-api-ts/components/fields/";
 export function Page() {
   const [location] = useLocation();
   const { doc, isLoading, error, queryKey } = useResource(apiPath(location));
-  const form = useResourceObjectForm({
+  const form = useDocumentForm({
     id: "form",
     document: doc,
     queryKey: queryKey,

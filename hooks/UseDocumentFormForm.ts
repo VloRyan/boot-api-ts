@@ -1,4 +1,4 @@
-import { ResourceObjectForm } from "@vloryan/ts-jsonapi-form/form/";
+import { DocumentForm } from "@vloryan/ts-jsonapi-form/form/";
 import {
   ResourceObject,
   SingleResourceDoc,
@@ -11,7 +11,7 @@ export interface SubmitResponseHandler {
   onSubmitSuccess: (object: ResourceObject) => void;
   onSubmitError: (error: Error) => void;
 }
-export interface useResourceObjectFormProps {
+export interface UseResourceObjectFormProps {
   document: SingleResourceDoc | null;
   id?: string;
   onSubmit?: (object: ResourceObject) => void;
@@ -20,10 +20,10 @@ export interface useResourceObjectFormProps {
   apiUrl?: string;
 }
 
-export const useResourceObjectForm = (props: useResourceObjectFormProps) => {
+export const useDocumentFormForm = (props: UseResourceObjectFormProps) => {
   const queryClient = useQueryClient();
   const defaultSubmitResponseHandler = useAlertSubmitResponseHandler();
-  return new ResourceObjectForm({
+  return new DocumentForm({
     ...props,
     onSubmitSuccess: (obj: ResourceObject) => {
       if (props.queryKey) {
