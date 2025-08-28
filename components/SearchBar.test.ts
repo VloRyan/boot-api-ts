@@ -8,11 +8,12 @@ describe("toQueryString", () => {
     const obj = {
       name: "John Doe",
       age: 20,
-      living: false,
+      living: false, // will be omitted
+      kids: true,
     } satisfies ObjectLike;
 
     expect(testables.toQueryString(obj as unknown as ObjectLike)).toBe(
-      "?filter[name]=John%20Doe&filter[age]=20&filter[living]=false",
+      "?filter[name]=John%20Doe&filter[age]=20&filter[kids]=true",
     );
   });
 

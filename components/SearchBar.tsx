@@ -84,23 +84,31 @@ function toFilterParams(f: ObjectLike, prefix: string): string[] {
   for (const k in f) {
     let value = f[k];
     const paramName = prefix ? prefix + "." + k : k;
-    if (value === undefined || value === null) {
+    if (!value) {
       continue;
     }
-    if (!isPrimitive(value)) {
-      if (isResourceObject(value as ObjectLike)) {
-        value = (f[k] as unknown as ResourceIdentifierObject).id;
-      } else {
-        if (Array.isArray(value)) {
-          const encValues = value.map((v) => encodeURIComponent(v as string));
-          params.push(asFilterParam(paramName, encValues.join(",")));
-        } else {
-          params.push(...toFilterParams(value as ObjectLike, k));
-        }
-        continue;
-      }
+    if (isPrimitive(value)) {
+      params.push(
+        asFilterParam(paramName, encodeURIComponent(value as string)),
+      );
+      continue;
     }
-    params.push(asFilterParam(paramName, encodeURIComponent(value as string)));
+    if (isResourceObject(value as ObjectLike)) {
+      params.push(
+        asFilterParam(
+          paramName,
+          (f[k] as unknown as ResourceIdentifierObject).id,
+        ),
+      );
+      continue;
+    }
+    if (Array.isArray(value)) {
+      const encValues = value.map((v) => encodeURIComponent(v as string));
+      params.push(asFilterParam(paramName, encValues.join(",")));
+      continue;
+    }
+    // must be an object
+    params.push(...toFilterParams(value as ObjectLike, k));
   }
   return params;
 }
