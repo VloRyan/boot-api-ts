@@ -78,7 +78,7 @@ function toQueryString(f: ObjectLike): string {
   let params = "";
   for (const k in f) {
     let value = f[k];
-    if (!value) {
+    if (value === undefined || value === null) {
       continue;
     }
     if (isResourceObject(value as ObjectLike)) {
@@ -91,3 +91,6 @@ function toQueryString(f: ObjectLike): string {
   }
   return params.length > 0 ? "?" + params : "";
 }
+export const testables = {
+  toQueryString,
+};
