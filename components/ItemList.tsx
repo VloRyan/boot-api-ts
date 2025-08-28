@@ -7,11 +7,11 @@ import {
   Included,
   ResourceObject,
 } from "@vloryan/ts-jsonapi-form/jsonapi/model/";
-import { useSearch } from "wouter";
 
-import { extractFetchOpts, FetchOpts } from "@vloryan/ts-jsonapi-form/jsonapi/";
+import { FetchOpts } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { QueryKey } from "@tanstack/query-core";
 import { extractPaginationMetaData } from "../functions";
+import { buildQueryString } from "@vloryan/ts-jsonapi-form/jsonapi/JsonApi.ts";
 
 export interface ItemGroup {
   data: ResourceObject[];
@@ -46,12 +46,7 @@ export const ItemList = ({
   groupFunc,
   GroupHeader,
 }: ItemListProps) => {
-  const searchString = useSearch();
-  const queryOpts = extractFetchOpts(searchString, opts);
-  const { doc, isLoading, error, queryKey } = useResources(
-    resourcesUrl,
-    queryOpts,
-  );
+  const { doc, isLoading, error, queryKey } = useResources(resourcesUrl, opts);
   const { addApiErrorAlerts } = useAlert();
   useEffect(() => {
     if (error) {
@@ -114,7 +109,7 @@ export const ItemList = ({
           <Col className="text-center">
             <Pagination
               location={locationUrl}
-              searchString={searchString}
+              searchString={buildQueryString(opts)}
               offset={pageMetaData.offset}
               totalPages={Math.ceil(pageMetaData.total / pageMetaData.limit)}
             />
