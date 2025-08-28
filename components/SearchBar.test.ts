@@ -25,4 +25,24 @@ describe("toQueryString", () => {
       "?filter[obj]=1",
     );
   });
+
+  it("with nested obj", () => {
+    const obj = {
+      nested: { name: "Peter" },
+    } satisfies ObjectLike;
+
+    expect(testables.toQueryString(obj as unknown as ObjectLike)).toBe(
+      "?filter[nested.name]=Peter",
+    );
+  });
+
+  it("with array", () => {
+    const obj = {
+      arr: ["one", "two", "three"],
+    } satisfies ObjectLike;
+
+    expect(testables.toQueryString(obj as unknown as ObjectLike)).toBe(
+      "?filter[arr]=one,two,three",
+    );
+  });
 });

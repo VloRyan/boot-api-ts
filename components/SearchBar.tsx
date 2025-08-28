@@ -75,22 +75,45 @@ export const SearchBar = ({
 };
 
 function toQueryString(f: ObjectLike): string {
-  let params = "";
+  const params = toFilterParams(f, "");
+  return params.length > 0 ? "?" + params.join("&") : "";
+}
+
+function toFilterParams(f: ObjectLike, prefix: string): string[] {
+  let params: string[] = [];
   for (const k in f) {
     let value = f[k];
+    const paramName = prefix ? prefix + "." + k : k;
     if (value === undefined || value === null) {
       continue;
     }
-    if (isResourceObject(value as ObjectLike)) {
-      value = (f[k] as unknown as ResourceIdentifierObject).id;
+    if (!isPrimitive(value)) {
+      if (isResourceObject(value as ObjectLike)) {
+        value = (f[k] as unknown as ResourceIdentifierObject).id;
+      } else {
+        if (Array.isArray(value)) {
+          const encValues = value.map((v) => encodeURIComponent(v as string));
+          params.push(asFilterParam(paramName, encValues.join(",")));
+        } else {
+          params.push(...toFilterParams(value as ObjectLike, k));
+        }
+        continue;
+      }
     }
-    if (params.length > 0) {
-      params += "&";
-    }
-    params += "filter[" + k + "]=" + encodeURIComponent(value as string);
+    params.push(asFilterParam(paramName, encodeURIComponent(value as string)));
   }
-  return params.length > 0 ? "?" + params : "";
+  return params;
 }
+
+function asFilterParam(k: string, v: string) {
+  return `filter[${k}]=${v}`;
+}
+
+function isPrimitive(v: any) {
+  const t = typeof v;
+  return t === "string" || t === "number" || t === "boolean";
+}
+
 export const testables = {
   toQueryString,
 };
