@@ -75,19 +75,54 @@ export const SearchBar = ({
 };
 
 function toQueryString(f: ObjectLike): string {
-  let params = "";
+  const params = toFilterParams(f, "");
+  return params.length > 0 ? "?" + params.join("&") : "";
+}
+
+function toFilterParams(f: ObjectLike, prefix: string): string[] {
+  const params: string[] = [];
   for (const k in f) {
-    let value = f[k];
+    const value = f[k];
+    const paramName = prefix ? prefix + "." + k : k;
     if (!value) {
       continue;
     }
+    if (isPrimitive(value)) {
+      params.push(
+        asFilterParam(paramName, encodeURIComponent(value as string)),
+      );
+      continue;
+    }
     if (isResourceObject(value as ObjectLike)) {
-      value = (f[k] as unknown as ResourceIdentifierObject).id;
+      params.push(
+        asFilterParam(
+          paramName,
+          (f[k] as unknown as ResourceIdentifierObject).id,
+        ),
+      );
+      continue;
     }
-    if (params.length > 0) {
-      params += "&";
+    if (Array.isArray(value)) {
+      const encValues = value.map((v) => encodeURIComponent(v as string));
+      params.push(asFilterParam(paramName, encValues.join(",")));
+      continue;
     }
-    params += "filter[" + k + "]=" + encodeURIComponent(value as string);
+    // must be an object
+    params.push(...toFilterParams(value as ObjectLike, k));
   }
-  return params.length > 0 ? "?" + params : "";
+  return params;
 }
+
+function asFilterParam(k: string, v: string) {
+  return `filter[${k}]=${v}`;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isPrimitive(v: any) {
+  const t = typeof v;
+  return t === "string" || t === "number" || t === "boolean";
+}
+
+export const testables = {
+  toQueryString,
+};

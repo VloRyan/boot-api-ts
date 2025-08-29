@@ -10,7 +10,7 @@ import {
 import { CreateButton, SaveButton, SearchBar } from "./";
 import { ButtonProps } from "react-bootstrap/Button";
 import { JSX, ReactElement, useRef, useState } from "react";
-import { Link, useLocation, useSearch } from "wouter";
+import { useLocation, useSearch } from "wouter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { extractFilter } from "@vloryan/ts-jsonapi-form/jsonapi/";
@@ -36,9 +36,7 @@ export function Toolbar(props: ToolbarProps) {
   let createButton: JSX.Element | null = null;
   if (props.createButton != undefined) {
     createButton = (
-      <Link to={location + "/new"}>
-        <CreateButton {...props.createButton} />
-      </Link>
+      <CreateButton {...props.createButton} href={location + "/new"} />
     );
   }
   let saveButton: JSX.Element | null = null;

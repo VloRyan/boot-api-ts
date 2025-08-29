@@ -3,47 +3,50 @@ import { ItemCells, LoadingSpinner, Pagination } from "./";
 import { Fragment, ReactElement, useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import {
+  CollectionResourceDoc,
   Included,
   ResourceObject,
 } from "@vloryan/ts-jsonapi-form/jsonapi/model/";
-import { useSearch } from "wouter";
 
-import { extractFetchOpts, FetchOpts } from "@vloryan/ts-jsonapi-form/jsonapi/";
+import { FetchOpts } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { QueryKey } from "@tanstack/query-core";
 import { extractPaginationMetaData } from "../functions";
+import { buildQueryString } from "@vloryan/ts-jsonapi-form/jsonapi/JsonApi.ts";
 
 export interface ItemGroup {
-  id: string;
-  headerFunc?: (group: ItemGroup) => ReactElement;
-  data: ResourceObject[] | null;
+  data: ResourceObject[];
 }
-export type ItemCellsFunc = (
-  obj: ResourceObject,
-  includes: Included,
-  queryKey: QueryKey,
-) => ReactElement;
+export interface ItemCellsFuncProps {
+  obj: ResourceObject;
+  includes: Included;
+  queryKey: QueryKey;
+}
+
+export type ItemCellsFunc = (props: ItemCellsFuncProps) => ReactElement;
+
+export interface GroupHeaderProps {
+  group: ItemGroup;
+  includes: Included;
+}
 
 export interface ItemListProps {
   resourcesUrl: string;
   locationUrl: string;
-  cells?: ItemCellsFunc;
   opts?: FetchOpts;
-  groupFunc?: (objs: ResourceObject[]) => ItemGroup[];
+  groupFunc?: (doc: CollectionResourceDoc) => ItemGroup[];
+  Cells?: ItemCellsFunc;
+  GroupHeader?: (props: GroupHeaderProps) => ReactElement;
 }
 
 export const ItemList = ({
   resourcesUrl,
   locationUrl,
   opts,
-  cells,
+  Cells,
   groupFunc,
+  GroupHeader,
 }: ItemListProps) => {
-  const searchString = useSearch();
-  const queryOpts = extractFetchOpts(searchString, opts);
-  const { doc, isLoading, error, queryKey } = useResources(
-    resourcesUrl,
-    queryOpts,
-  );
+  const { doc, isLoading, error, queryKey } = useResources(resourcesUrl, opts);
   const { addApiErrorAlerts } = useAlert();
   useEffect(() => {
     if (error) {
@@ -56,27 +59,48 @@ export const ItemList = ({
   if (isLoading) {
     return <LoadingSpinner />;
   }
-  if (!cells) {
-    cells = (obj, queryKey) => <ItemCells object={obj} queryKey={queryKey} />;
-  }
   const pageMetaData = extractPaginationMetaData(doc);
 
-  const itemGroups: ItemGroup[] = groupFunc
-    ? groupFunc(doc?.data ? doc?.data : [])
-    : [{ id: "0", data: doc?.data ? doc.data : null }];
-
+  const itemGroups: ItemGroup[] =
+    groupFunc && doc
+      ? groupFunc(doc)
+      : [
+          {
+            data: doc?.data || ([] as ResourceObject[]),
+          } satisfies ItemGroup,
+        ];
   return (
     <Container fluid>
-      {itemGroups.map((group) => {
+      {itemGroups.map((group, index) => {
         return (
-          <Fragment key={group.id}>
-            <GroupHeader group={group} />
-            <GroupDataRows
-              group={group}
-              cells={cells}
-              queryKey={queryKey}
-              included={doc?.included}
-            />
+          <Fragment key={index}>
+            {GroupHeader ? (
+              <GroupHeader group={group} includes={doc?.included || []} />
+            ) : null}
+            {group.data
+              ? group.data.map((item, index) => (
+                  <Row
+                    key={index}
+                    className={
+                      "align-items-center" +
+                      (index + 1 != group.data?.length
+                        ? ""
+                        : " border-bottom border-2") +
+                      (index % 2 === 0 ? "" : " bg-body-secondary")
+                    }
+                  >
+                    {Cells ? (
+                      <Cells
+                        obj={item}
+                        includes={doc?.included || []}
+                        queryKey={queryKey}
+                      />
+                    ) : (
+                      <ItemCells object={item} queryKey={queryKey} />
+                    )}
+                  </Row>
+                ))
+              : null}
           </Fragment>
         );
       })}
@@ -85,7 +109,7 @@ export const ItemList = ({
           <Col className="text-center">
             <Pagination
               location={locationUrl}
-              searchString={searchString}
+              searchString={buildQueryString(opts)}
               offset={pageMetaData.offset}
               totalPages={Math.ceil(pageMetaData.total / pageMetaData.limit)}
             />
@@ -94,34 +118,4 @@ export const ItemList = ({
       )}
     </Container>
   );
-};
-const GroupDataRows = ({
-  group,
-  cells,
-  queryKey,
-  included,
-}: {
-  group: ItemGroup;
-  cells: ItemCellsFunc;
-  queryKey: QueryKey;
-  included?: Included;
-}) => {
-  return group.data?.map((item, index) => (
-    <Row
-      key={index}
-      className={
-        "align-items-center" +
-        (index + 1 != group.data?.length ? "" : " border-bottom border-2") +
-        (index % 2 === 0 ? "" : " bg-body-secondary")
-      }
-    >
-      {cells(item, included || [], queryKey)}
-    </Row>
-  ));
-};
-
-const GroupHeader = ({ group }: { group: ItemGroup }) => {
-  return group.headerFunc ? (
-    <Row className="align-items-center">{group.headerFunc(group)}</Row>
-  ) : null;
 };
