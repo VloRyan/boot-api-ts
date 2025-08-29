@@ -104,7 +104,7 @@ export interface DeleteResourceButtonProps
 }
 
 export function DeleteResourceButton(props: DeleteResourceButtonProps) {
-  const { addApiErrorAlerts } = useAlert();
+  const { addApiErrorAlerts, addSuccessAlert } = useAlert();
   const queryClient = useQueryClient();
   const { url, queryKey, ...buttonProps } = props;
   return (
@@ -113,6 +113,7 @@ export function DeleteResourceButton(props: DeleteResourceButtonProps) {
         deleteResource(joinPath(Config.ApiPath, url)).then(
           () => {
             queryClient.invalidateQueries({ queryKey }).then();
+            addSuccessAlert("Deleted");
           },
           (error) => addApiErrorAlerts(error),
         );
