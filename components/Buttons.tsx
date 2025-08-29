@@ -9,36 +9,79 @@ import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { ButtonProps } from "react-bootstrap/Button";
 
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { PropsWithChildren, Ref } from "react";
+import { PropsWithChildren } from "react";
 import { deleteResource } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { joinPath } from "../functions";
 import { Config } from "../Config.ts";
 import { useAlert } from "../hooks";
 import { useQueryClient } from "@tanstack/react-query";
 import { QueryKey } from "@tanstack/query-core";
+import { Link } from "wouter";
 
-interface IconButtonProps extends ButtonProps {
+export interface IconButtonProps extends PropsWithChildren<ButtonProps> {
   icon: IconProp;
-  ref?: Ref<HTMLButtonElement>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  download?: any;
 }
 
-export function IconButton(props: PropsWithChildren<IconButtonProps>) {
-  if (props.disabled && props.title) {
+export function IconButton({
+  icon,
+  title,
+  children,
+  href,
+  download,
+  ...btnProps
+}: IconButtonProps) {
+  if (btnProps.disabled && title) {
     return (
-      <OverlayTrigger overlay={<Tooltip>{props.title}</Tooltip>}>
+      <OverlayTrigger overlay={<Tooltip>{title}</Tooltip>}>
         <span className="d-inline-block">
-          <Button {...props}>
-            <FontAwesomeIcon icon={props.icon}></FontAwesomeIcon>
-            {props.children}
+          <Button {...btnProps}>
+            <FontAwesomeIcon icon={icon}></FontAwesomeIcon>
+            {children}
           </Button>
         </span>
       </OverlayTrigger>
     );
   }
+  if (href) {
+    return download ? (
+      <a
+        href={href}
+        download={download}
+        title={title}
+        className={
+          "align-content-center btn" +
+          (btnProps.variant ? " btn-" + btnProps.variant : " btn-primary") +
+          (btnProps.size ? " btn-" + btnProps.size : "") +
+          (btnProps.className ? " " + btnProps.className : "")
+        }
+        role="button"
+      >
+        <FontAwesomeIcon icon={icon}></FontAwesomeIcon>
+        {children}
+      </a>
+    ) : (
+      <Link
+        to={href}
+        title={title}
+        className={
+          "align-content-center btn" +
+          (btnProps.variant ? " btn-" + btnProps.variant : " btn-primary") +
+          (btnProps.size ? " btn-" + btnProps.size : "") +
+          (btnProps.className ? " " + btnProps.className : "")
+        }
+        role="button"
+      >
+        <FontAwesomeIcon icon={icon}></FontAwesomeIcon>
+        {children}
+      </Link>
+    );
+  }
   return (
-    <Button {...props}>
-      <FontAwesomeIcon icon={props.icon} title={props.title}></FontAwesomeIcon>
-      {props.children}
+    <Button title={title} {...btnProps}>
+      <FontAwesomeIcon icon={icon}></FontAwesomeIcon>
+      {children}
     </Button>
   );
 }

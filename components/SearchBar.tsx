@@ -80,9 +80,9 @@ function toQueryString(f: ObjectLike): string {
 }
 
 function toFilterParams(f: ObjectLike, prefix: string): string[] {
-  let params: string[] = [];
+  const params: string[] = [];
   for (const k in f) {
-    let value = f[k];
+    const value = f[k];
     const paramName = prefix ? prefix + "." + k : k;
     if (!value) {
       continue;
@@ -117,6 +117,7 @@ function asFilterParam(k: string, v: string) {
   return `filter[${k}]=${v}`;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isPrimitive(v: any) {
   const t = typeof v;
   return t === "string" || t === "number" || t === "boolean";
