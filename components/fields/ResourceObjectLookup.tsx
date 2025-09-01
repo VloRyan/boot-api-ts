@@ -33,6 +33,7 @@ export const ResourceObjectLookupField = React.forwardRef<
   const [selected, setSelected] = useState<ResourceObject | null>(null);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
   const fieldRef = useRef<HTMLInputElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -54,12 +55,26 @@ export const ResourceObjectLookupField = React.forwardRef<
       setIsLoading(true);
       fetchResults(url, "name", e.target.value)
         .then((doc) => {
-          setResults(doc.data);
+          if (doc && doc.data) {
+            setResults(doc.data);
+            setError(null);
+          } else {
+            if (doc.errors) {
+              setError({
+                name: "ApiError",
+                message: doc.errors
+                  .map((e) => e.title + (e.detail ? ": " + e.detail : ""))
+                  .join(", "),
+              } satisfies Error);
+            } else {
+              setError({ name: "Unknown", message: "Error occurred" });
+            }
+          }
           setIsLoading(false);
         })
         .catch((err) => {
           setIsLoading(false);
-          console.error(err);
+          setError(err);
         });
     }
   };
@@ -75,13 +90,13 @@ export const ResourceObjectLookupField = React.forwardRef<
       onSelectionChange(selected);
     }
   };
-
   return (
     <LabeledGroup {...groupProps}>
       <Form.Control
         name={name}
         ref={fieldRef}
         type="text"
+        isInvalid={error !== null}
         autoComplete="off"
         onChange={handleInputChange}
         defaultValue={
@@ -97,8 +112,13 @@ export const ResourceObjectLookupField = React.forwardRef<
           }
         }}
       />
+      {error && (
+        <Form.Control.Feedback type="invalid">
+          {error.message}
+        </Form.Control.Feedback>
+      )}
       <Dropdown
-        show={showDropDown}
+        show={!error && showDropDown}
         onToggle={(nextShow, meta) => {
           if (!nextShow && meta.source !== "select") {
             setShowDropDown(false);
@@ -112,6 +132,7 @@ export const ResourceObjectLookupField = React.forwardRef<
               <LoadingSpinner />
             </Dropdown.Item>
           ) : (
+            results &&
             results.length > 0 &&
             results.map((result: ResourceObject) => (
               <Dropdown.Item
