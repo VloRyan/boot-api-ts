@@ -44,7 +44,7 @@ export function IconButton({
       </OverlayTrigger>
     );
   }
-  if (href) {
+  if (href && !btnProps.disabled) {
     return download ? (
       <a
         href={href}
