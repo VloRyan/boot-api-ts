@@ -23,6 +23,7 @@ export interface ItemCellsFuncProps {
   obj: ResourceObject;
   includes: Included;
   queryKey: QueryKey;
+  group: ItemGroup;
 }
 
 export type ItemCellsFunc = (props: ItemCellsFuncProps) => ReactElement;
@@ -99,6 +100,7 @@ export const ItemList = ({
                         obj={item}
                         includes={doc?.included || []}
                         queryKey={queryKey}
+                        group={group}
                       />
                     ) : (
                       <ItemCells object={item} queryKey={queryKey} />
