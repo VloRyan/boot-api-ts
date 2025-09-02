@@ -12,9 +12,12 @@ import { FetchOpts } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { QueryKey } from "@tanstack/query-core";
 import { extractPaginationMetaData } from "../functions";
 import { buildQueryString } from "@vloryan/ts-jsonapi-form/jsonapi/JsonApi.ts";
+import { MetaObject } from "@vloryan/ts-jsonapi-form/jsonapi/model/Types";
 
 export interface ItemGroup {
   data: ResourceObject[];
+  sortKey?: string;
+  meta?: MetaObject;
 }
 export interface ItemCellsFuncProps {
   obj: ResourceObject;
@@ -63,7 +66,9 @@ export const ItemList = ({
 
   const itemGroups: ItemGroup[] =
     groupFunc && doc
-      ? groupFunc(doc)
+      ? groupFunc(doc).sort((a, b) =>
+          (a.sortKey || "").localeCompare(b.sortKey || ""),
+        )
       : [
           {
             data: doc?.data || ([] as ResourceObject[]),
