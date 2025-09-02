@@ -5,7 +5,6 @@ import { ResourceObject } from "@vloryan/ts-jsonapi-form/jsonapi/model";
 import { TypeIcon } from "./icons/";
 
 import { Col } from "react-bootstrap";
-import { Children, PropsWithChildren } from "react";
 import { joinPath } from "../functions";
 import { QueryKey } from "@tanstack/query-core";
 import { Link, useLocation } from "wouter";
@@ -20,38 +19,20 @@ export function ItemCells({ object, queryKey }: ItemCellsProps) {
     return null;
   }
   const [location] = useLocation();
+  const objectUrl = joinPath(location, object.id);
   return (
     <>
-      <Col>
-        <Link to={joinPath(location, object.id)}>
+      <Col sm="10">
+        <Link to={objectUrl}>
           <TypeIcon type={object.type as string} className="me-1"></TypeIcon>
           {object.attributes && object.attributes.name
             ? (object.attributes.name as string)
             : object.id}
         </Link>
       </Col>
-      <ItemActionCol
-        objectUrl={joinPath(location, object.id)}
-        queryKey={queryKey}
-      />
+      <Col sm="2" className="text-end pe-0">
+        <DeleteResourceButton url={objectUrl} queryKey={queryKey} size="sm" />
+      </Col>
     </>
   );
 }
-interface ItemActionColProps {
-  objectUrl: string;
-  queryKey: QueryKey;
-}
-export const ItemActionCol = ({
-  objectUrl,
-  queryKey,
-  children,
-}: PropsWithChildren<ItemActionColProps>) => {
-  return (
-    <Col className="pe-0 d-flex justify-content-end">
-      {Children.map(children, (child) => (
-        <div className="me-1">{child}</div>
-      ))}
-      <DeleteResourceButton url={objectUrl} queryKey={queryKey} size="sm" />
-    </Col>
-  );
-};
