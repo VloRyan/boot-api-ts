@@ -12,14 +12,18 @@ import { FetchOpts } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { QueryKey } from "@tanstack/query-core";
 import { extractPaginationMetaData } from "../functions";
 import { buildQueryString } from "@vloryan/ts-jsonapi-form/jsonapi/JsonApi.ts";
+import { MetaObject } from "@vloryan/ts-jsonapi-form/jsonapi/model/Types";
 
 export interface ItemGroup {
   data: ResourceObject[];
+  sortKey?: string;
+  meta?: MetaObject;
 }
 export interface ItemCellsFuncProps {
   obj: ResourceObject;
   includes: Included;
   queryKey: QueryKey;
+  group: ItemGroup;
 }
 
 export type ItemCellsFunc = (props: ItemCellsFuncProps) => ReactElement;
@@ -63,7 +67,9 @@ export const ItemList = ({
 
   const itemGroups: ItemGroup[] =
     groupFunc && doc
-      ? groupFunc(doc)
+      ? groupFunc(doc).sort((a, b) =>
+          (a.sortKey || "").localeCompare(b.sortKey || ""),
+        )
       : [
           {
             data: doc?.data || ([] as ResourceObject[]),
@@ -94,6 +100,7 @@ export const ItemList = ({
                         obj={item}
                         includes={doc?.included || []}
                         queryKey={queryKey}
+                        group={group}
                       />
                     ) : (
                       <ItemCells object={item} queryKey={queryKey} />
