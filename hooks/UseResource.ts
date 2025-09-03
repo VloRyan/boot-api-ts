@@ -3,13 +3,13 @@ import {
   CollectionResourceDoc,
   SingleResourceDoc,
 } from "@vloryan/ts-jsonapi-form/jsonapi/model/";
-import { useQuery } from "@tanstack/react-query";
+import { QueryObserverOptions, useQuery } from "@tanstack/react-query";
 import type { QueryKey } from "@tanstack/query-core";
 
-export interface QueryOpts {
-  staleTime?: number;
-  retry?: boolean | number;
-}
+export type QueryOpts = Omit<
+  QueryObserverOptions,
+  "queryFn" | "queryKey" | "queryKeyHashFn" | "queryHash"
+>;
 
 export const useResource = (
   url: string,
