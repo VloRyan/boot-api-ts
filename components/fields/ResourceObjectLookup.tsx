@@ -13,10 +13,12 @@ import {
 import { MEDIA_TYPE } from "@vloryan/ts-jsonapi-form/jsonapi/";
 import { LoadingSpinner } from "../";
 import { LabeledGroup } from "./Label";
-
+import { toQueryString } from "../../functions";
+export type FilterType = { [key: string]: string | number | boolean };
 interface ResourceObjectLookupFieldProps {
   name: string;
   url: string;
+  filter?: FilterType;
   defaultValue?: ResourceObject | null;
   onSelectionChange?: (e: ResourceObject | null) => void;
 }
@@ -28,7 +30,8 @@ export const ResourceObjectLookupField = React.forwardRef<
   ResourceObjectLookupFieldType,
   ResourceObjectLookupFieldProps
 >((props, ref) => {
-  const { name, url, defaultValue, onSelectionChange, ...groupProps } = props;
+  const { name, url, filter, defaultValue, onSelectionChange, ...groupProps } =
+    props;
   const [results, setResults] = useState<ResourceObject[]>([]);
   const [selected, setSelected] = useState<ResourceObject | null>(null);
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
@@ -53,7 +56,9 @@ export const ResourceObjectLookupField = React.forwardRef<
     if (nameValue.length > 1) {
       setShowDropDown(true);
       setIsLoading(true);
-      fetchResults(url, "name", e.target.value)
+      const f = filter || {};
+      f.name = e.target.value;
+      fetchResults(url, f)
         .then((doc) => {
           if (doc && doc.data) {
             setResults(doc.data);
@@ -159,12 +164,12 @@ export const ResourceObjectLookupField = React.forwardRef<
 
 async function fetchResults(
   url: string,
-  filterName: string,
-  filterValue: string,
+  filter: FilterType,
   limit: string = "10",
 ): Promise<CollectionResourceDoc> {
+  const filterQuery = toQueryString(filter);
   return fetch(
-    url + `?filter[${filterName}]=${filterValue}&page[limit]=${limit}`,
+    url + `?${filterQuery ? filterQuery + "&" : ""}page[limit]=${limit}`,
     {
       headers: {
         "Content-Type": MEDIA_TYPE,

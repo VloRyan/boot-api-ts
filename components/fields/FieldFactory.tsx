@@ -5,6 +5,7 @@ import {
   CheckboxProps,
   DateField,
   DateTimeField,
+  FilterType,
   LabeledGroup,
   LabeledGroupProps,
   LabeledGroupPropsWithOnChange,
@@ -45,6 +46,7 @@ export interface SelectFieldColProps extends FieldColProps {
 }
 export interface LookupFieldColProps extends FieldColProps {
   url: string;
+  filter?: FilterType;
   onSelectionChange?: (e: ResourceObject | null) => void;
 }
 export interface NumberFieldColProps extends FieldColProps {
@@ -150,7 +152,7 @@ export class BootstrapFieldFactory implements FieldFactory {
         console.error("Error fetching data:", error);
       }
     };
-    const { name, url, onSelectionChange, ...groupProps } = props;
+    const { name, url, filter, onSelectionChange, ...groupProps } = props;
     return (
       <LabeledGroup {...groupProps}>
         {id && !obj ? (
@@ -159,6 +161,7 @@ export class BootstrapFieldFactory implements FieldFactory {
           <ResourceObjectLookupField
             name={name}
             url={url}
+            filter={filter}
             defaultValue={obj}
             onSelectionChange={(selected) => {
               setObj(() => {
