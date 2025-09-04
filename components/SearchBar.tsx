@@ -5,11 +5,9 @@ import { useLocation, useSearch } from "wouter";
 import { PropsWithChildren, ReactElement } from "react";
 import { SingleObjectForm } from "@vloryan/ts-jsonapi-form/form/";
 import { extractFilter } from "@vloryan/ts-jsonapi-form/jsonapi/";
-import {
-  ObjectLike,
-  isResourceObject,
-} from "@vloryan/ts-jsonapi-form/jsonapi/model";
-import { ResourceIdentifierObject } from "@vloryan/ts-jsonapi-form/jsonapi/model/";
+import { ObjectLike } from "@vloryan/ts-jsonapi-form/jsonapi/model";
+
+import { toQueryString } from "../functions";
 export type SearchBarProps = PropsWithChildren<{
   show: boolean;
   setShow: (show: boolean) => void;
@@ -72,57 +70,4 @@ export const SearchBar = ({
       </Offcanvas.Body>
     </Offcanvas>
   );
-};
-
-function toQueryString(f: ObjectLike): string {
-  const params = toFilterParams(f, "");
-  return params.length > 0 ? "?" + params.join("&") : "";
-}
-
-function toFilterParams(f: ObjectLike, prefix: string): string[] {
-  const params: string[] = [];
-  for (const k in f) {
-    const value = f[k];
-    const paramName = prefix ? prefix + "." + k : k;
-    if (!value) {
-      continue;
-    }
-    if (isPrimitive(value)) {
-      params.push(
-        asFilterParam(paramName, encodeURIComponent(value as string)),
-      );
-      continue;
-    }
-    if (isResourceObject(value as ObjectLike)) {
-      params.push(
-        asFilterParam(
-          paramName,
-          (f[k] as unknown as ResourceIdentifierObject).id,
-        ),
-      );
-      continue;
-    }
-    if (Array.isArray(value)) {
-      const encValues = value.map((v) => encodeURIComponent(v as string));
-      params.push(asFilterParam(paramName, encValues.join(",")));
-      continue;
-    }
-    // must be an object
-    params.push(...toFilterParams(value as ObjectLike, k));
-  }
-  return params;
-}
-
-function asFilterParam(k: string, v: string) {
-  return `filter[${k}]=${v}`;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isPrimitive(v: any) {
-  const t = typeof v;
-  return t === "string" || t === "number" || t === "boolean";
-}
-
-export const testables = {
-  toQueryString,
 };
