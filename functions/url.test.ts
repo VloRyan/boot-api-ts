@@ -38,7 +38,7 @@ describe("toQueryString", () => {
     const obj = { name: "Peters" } satisfies ObjectLike;
 
     expect(toQueryString(obj as unknown as ObjectLike, "family")).toBe(
-      "?family[name]=Peters",
+      "family[name]=Peters",
     );
   });
 
@@ -53,7 +53,7 @@ describe("toQueryString", () => {
     } satisfies ObjectLike;
 
     expect(toQueryString(obj as unknown as ObjectLike)).toBe(
-      "?filter[name]=John%20Doe&filter[age]=20&filter[living]=false&filter[kids]=true",
+      "filter[name]=John%20Doe&filter[age]=20&filter[living]=false&filter[kids]=true",
     );
   });
 
@@ -62,7 +62,7 @@ describe("toQueryString", () => {
       obj: { id: "1", type: "object" } satisfies ResourceObject,
     } satisfies ObjectLike;
 
-    expect(toQueryString(obj as unknown as ObjectLike)).toBe("?filter[obj]=1");
+    expect(toQueryString(obj as unknown as ObjectLike)).toBe("filter[obj]=1");
   });
 
   it("with nested obj", () => {
@@ -71,7 +71,7 @@ describe("toQueryString", () => {
     } satisfies ObjectLike;
 
     expect(toQueryString(obj as unknown as ObjectLike)).toBe(
-      "?filter[nested.name]=Peter",
+      "filter[nested.name]=Peter",
     );
   });
 
@@ -81,7 +81,7 @@ describe("toQueryString", () => {
     } satisfies ObjectLike;
 
     expect(toQueryString(obj as unknown as ObjectLike)).toBe(
-      "?filter[arr]=one,two,three",
+      "filter[arr]=one,two,three",
     );
   });
 });

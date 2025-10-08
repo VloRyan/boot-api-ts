@@ -35,8 +35,7 @@ export function toQueryString(
   f: ObjectLike,
   paramFamilyName: string = "filter",
 ): string {
-  const params = toFilterParams(f, paramFamilyName);
-  return params.length > 0 ? "?" + params.join("&") : "";
+  return toFilterParams(f, paramFamilyName).join("&");
 }
 
 function toFilterParams(
