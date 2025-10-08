@@ -56,9 +56,8 @@ export const SearchBar = ({
                   if (onBeforeSearch) {
                     onBeforeSearch(searchForm);
                   }
-                  setLocation(
-                    location + toQueryString(searchForm.object as ObjectLike),
-                  );
+                  const q = toQueryString(searchForm.object as ObjectLike);
+                  setLocation(location + (q != "" ? "?" : "") + q);
                   setShow(false);
                 }}
               >
